@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Cleanv2</string>
+    <string name="title_activity_home">Home</string>
+    <string name="title_activity_home1">Home1</string>
+    <string name="title_activity_sign_up">SignUp</string>
+    <string name="title_activity_user_info">UserInfo</string>
+
+    <string name="title_activity_booking">Booking</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+</resources>
