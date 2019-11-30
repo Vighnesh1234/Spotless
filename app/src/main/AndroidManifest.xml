@@ -14,10 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Booking"
-            android:label="@string/title_activity_booking"
+            android:name=".BookingStep1"
             android:exported="true"
+            android:label="@string/title_activity_booking_step1"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Booking"
+            android:exported="true"
+            android:label="@string/title_activity_booking"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".UserInfo"
             android:exported="true"
@@ -29,6 +34,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Home"
+            android:exported="true"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MainActivity">

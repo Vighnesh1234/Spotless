@@ -27,12 +27,12 @@
                 tools:srcCompat="@drawable/person" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/username"
                 android:layout_width="324dp"
                 android:layout_height="match_parent"
                 android:background="#00F5F1F1"
                 android:gravity="center|left"
-                android:text="Vighnesh"
+                android:hint="Vighnesh"
                 android:textColor="#FFFFFF"
                 android:textSize="24sp" />
 
