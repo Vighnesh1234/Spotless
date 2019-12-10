@@ -1,12 +1,17 @@
 <resources>
-    <string name="app_name">Cleanv2</string>
+    <string name="app_name">Spotless</string>
     <string name="title_activity_home">Home</string>
     <string name="title_activity_home1">Home1</string>
     <string name="title_activity_sign_up">SignUp</string>
     <string name="title_activity_user_info">UserInfo</string>
-
     <string name="title_activity_booking">Booking</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_booking_step1">BookingStep1</string>
+    <string name="title_activity_plz">plz</string>
+    <string name="title_activity_booking_cleaner">BookingCleaner</string>
+    <string name="title_activity_user_details">userDetails</string>
+    <string name="title_activity_history">history</string>
+    <string name="title_activity_user_detail">UserDetail</string>
+    <string name="title_activity_booked">Booked</string>
 </resources>

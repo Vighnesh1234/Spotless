@@ -2,151 +2,118 @@ package com.example.cleanv2;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.example.cleanv2.Model.Name;
-import com.example.cleanv2.Model.User;
+import com.example.cleanv2.Service.BookingCleaner;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.TextView;
-import  com.example.cleanv2.UserInfo;
+import android.widget.Toast;
+
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.Nullable;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+
 public class Home extends AppCompatActivity {
 
 
     final FirebaseAuth mAuth = FirebaseAuth.getInstance();
-  //  FirebaseFirestore db = FirebaseFirestore.getInstance();
- // DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
     String uid = FirebaseAuth.getInstance().getUid();
-
     private static final String FIRE_LOG ="Fire+Log" ;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    TextView placing;
+    @Nullable
+    @BindView(R.id.onBooking)
+    Button onBooking;
 
+    @Nullable
+    @BindView(R.id.onUserDetails)
+    Button onUserDetails;
 
+    @Nullable
+    @BindView(R.id.onBookingDetails)
+    Button onBookingDetails;
 
-
-
-
+    @Nullable
+    @BindView(R.id.onLogout)
+    Button onLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        //Toolbar toolbar = findViewById(R.id.toolbar);
-       // setSupportActionBar(toolbar);
-
-      //  FloatingActionButton fab = findViewById(R.id.fab);
-        /*fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
-
         final TextView placing =findViewById(R.id.username);
+        ButterKnife.bind( this );
 
-System.out.println("USER IS ++++++++"+uid);
 
 
-       /*db.collection("users").document("test").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+      onUserDetails.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              startActivity(new Intent(Home.this,UserDetail.class));
+          }
+      });
+
+
+
+        onBookingDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Home.this,Booked.class));
+            }
+        });
+
+
+
+
+        onBooking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Home.this,BookingCleaner.class));
+            }
+        });
+        String userId = mAuth.getCurrentUser().getUid();
+        DocumentReference docRef = db.collection("user4").document(userId);
+
+        onLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "successfully logged out", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Home.this,MainActivity.class));
+            }
+        });
+
+
+
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                System.out.println("+++++++++++++trace oncomplete");
-                if(task.isSuccessful()){
-                    DocumentSnapshot   documentSnapshot=task.getResult();
-
-
-
-                    if(documentSnapshot.exists()&& documentSnapshot!=null) {
-                        String username = documentSnapshot.getString("name");
-placing.setText(username);
-                        System.out.println("+++++++++++++else oncomplete:::"+username);
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Map<String, Object> user = new HashMap<>();
+                        user=   document.getData();
+                        String names= (String) user.get("name");
+                        placing.setText(names);
+                    } else {
+                        Log.d("onComplete", "Documents doesnt exist");
                     }
-                }
-                else
-                {
-                    System.out.println("+++++++++++++else oncomplete");
-                    Log.d(FIRE_LOG,"++++++++++++FIREBASE retireve fail"+task.getException().getMessage());
+                } else {
+                    Log.d("Failure", "failed to save data");
                 }
             }
         });
-*/
-
-       Name name=new Name();
-System.out.println("++++++++++++++++++++++++name:"+name.getName());
-
-            placing.setText(  name.getName());
-
-
-
-
-
-       /* Query query = reference.child("userData").orderByChild(uid).equalTo(0);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // dataSnapshot is the "issue" node with all children with id 0
-                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
-                        // do something with the individual "issues"
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-
     }
-
-
-    public void registered(View view) {
-    }
-
-    public void onUpdate(View view) {
-    }
-
-    public void onHistory(View view) {
-    }
-
-    public void onShopping(View view) {
-    }
-
-    public void onNotification(View view) {
-    }
-
-
-    public void onBooking(View view) {
-
-        startActivity(new Intent(this,BookingStep1.class));
-    }
-
 }
+

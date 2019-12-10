@@ -14,14 +14,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".BookingStep1"
+            android:name=".Booked"
+            android:label="@string/title_activity_booked"
             android:exported="true"
-            android:label="@string/title_activity_booking_step1"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".Booking"
+            android:name=".UserDetail"
+            android:label="@string/title_activity_user_detail"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Service.BookingCleaner"
             android:exported="true"
-            android:label="@string/title_activity_booking"
+            android:label="@string/title_activity_booking_cleaner"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".UserInfo"
