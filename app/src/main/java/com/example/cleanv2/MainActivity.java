@@ -27,9 +27,13 @@ public class MainActivity extends AppCompatActivity {
         editPassword=findViewById(R.id.editPassword);
     }
 
+
+    //onCLickListener when user clicks Signup button
     public void onClickSignup(View view) {
 startActivity(new Intent(this,SignUp.class));
     }
+
+    //onCLickListener when user clicks Login button
 
     public void onClickLogin(View view) {
         String email= editEmail.getText().toString();
@@ -43,6 +47,8 @@ startActivity(new Intent(this,SignUp.class));
             editPassword.setError("please enter password");
         }
        else {
+
+           //Firebase authen
             mAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -53,7 +59,7 @@ startActivity(new Intent(this,SignUp.class));
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                     } else {
-                        Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Please Sign up", Toast.LENGTH_LONG).show();;
                     }
                 }
             });

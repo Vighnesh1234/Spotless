@@ -7,26 +7,33 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.example.cleanv2.Home;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import com.example.cleanv2.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -78,7 +85,10 @@ public class BookingCleaner extends AppCompatActivity {
     List<String> cityList = new ArrayList<>();
     List<String> cleanerList = new ArrayList<>();
     List<String> bookingList = new ArrayList<>();
+    List<String> userDetailsList = new ArrayList<>();
 
+    String Cleaner_name = "";
+    String city="";
     final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -89,6 +99,7 @@ public class BookingCleaner extends AppCompatActivity {
 
         Calendar cal=Calendar.getInstance();
 
+        //Calendar variables
         final  int year=cal.get( Calendar.YEAR );
         final  int month=cal.get( Calendar.MONTH );
         final  int day=cal.get( Calendar.DAY_OF_MONTH );
@@ -108,7 +119,7 @@ public class BookingCleaner extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         buttonFrom.setText( hourOfDay+":" +minute);
-                        bookingList.add("Date_from"+hourOfDay+":" +minute);
+                        bookingList.add("From"+hourOfDay+":" +minute);
                     }
                 },from_hour,from_minute,android.text.format.DateFormat.is24HourFormat( context ) );
                 timePickerDialog.show();
@@ -119,14 +130,14 @@ public class BookingCleaner extends AppCompatActivity {
         buttonTo.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TimePickerDialog timePickerDialog= new TimePickerDialog( context, new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog timePickerDialog2= new TimePickerDialog( context, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        buttonFrom.setText( hourOfDay+":" +minute);
-                        bookingList.add("Date_to:"+hourOfDay+":" +minute);
+                        buttonTo.setText( hourOfDay+":" +minute);
+                        bookingList.add("To:"+hourOfDay+":" +minute);
                     }
                 },to_hour,to_minute,android.text.format.DateFormat.is24HourFormat( context ) );
-                timePickerDialog.show();
+                timePickerDialog2.show();
             }
         } );
 
@@ -144,13 +155,14 @@ public class BookingCleaner extends AppCompatActivity {
             }
         } );
 
+
         onDateSetListener= new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 String dateText=year+"/"+month+"/"+dayOfMonth;
 
-                textDate.setText(  year+"/"+month+"/"+dayOfMonth);
-                bookingList.add("Booking_Date:"+year+"/"+month+"/"+dayOfMonth);
+                textDate.setText(  dateText);
+                bookingList.add("Booking_Date:"+dateText);
             }
         };
 
@@ -160,11 +172,19 @@ public class BookingCleaner extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 bookingDetails(bookingList);
+
+                sendEmail();
+
+            Toast.makeText(getApplicationContext(), "Booking confrimed", Toast.LENGTH_LONG).show();
+
                 startActivity(new Intent(BookingCleaner.this, Home.class));
             }
         });
 
     }
+
+
+    //Function for extracting the cities values from firebase
     private void selectCity() {
         Task<QuerySnapshot> allCleanerRef = FirebaseFirestore.getInstance()
                 .collection( "Cleaners" )
@@ -182,6 +202,7 @@ public class BookingCleaner extends AppCompatActivity {
                                 public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                                     Snackbar.make( view, "Selected " + item, Snackbar.LENGTH_LONG ).show();
                                     selectCleaner( item );
+                                    city=item;
                                     bookingList.add("City:"+item);
                                 }
                             } );
@@ -191,6 +212,9 @@ public class BookingCleaner extends AppCompatActivity {
                 } );
     }
 
+
+
+    //Function for extracting the cleaner values from firebase
     private void selectCleaner(String item) {
         Task<QuerySnapshot> allCleanerRef = FirebaseFirestore.getInstance()
                 .collection( "Cleaners" )
@@ -213,6 +237,7 @@ public class BookingCleaner extends AppCompatActivity {
                                 public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                                     Snackbar.make( view, "Selected " + item, Snackbar.LENGTH_LONG ).show();
                                     bookingList.add("Cleaner:"+item);
+                                    Cleaner_name=item;
                                 }
                             } );
                         }
@@ -220,6 +245,8 @@ public class BookingCleaner extends AppCompatActivity {
                 } );
     }
 
+
+    //Function for storing the booking details to firebase
     private void bookingDetails(List<String> bookingList) {
         String listString = "";
         for (String s : bookingList)
@@ -227,9 +254,77 @@ public class BookingCleaner extends AppCompatActivity {
             listString += s + "\t";
         }
         String userId = mAuth.getCurrentUser().getUid();
-        DocumentReference docRef = db.collection("user4").document(userId);
+        DocumentReference docRef = db.collection("userInfo").document(userId);
+
         docRef.update("Booking Details",listString);
     }
+
+    private void sendEmail() {
+        //Fetching Cleaner details for sending email message to the client/user
+        DocumentReference docRef = db.collection("Cleaners").document(city).collection("list").document(Cleaner_name);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //hash map for user object
+                        Map<String, Object> Cleaner = new HashMap<>();
+                        Cleaner = document.getData();
+                        String cleanerEmail =(String) Cleaner.get("Email");
+                        String CleanerInfo=Cleaner.toString();
+                       // CleanerInfo=CleanerInfo.substring(1, CleanerInfo.length()-1);
+                        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                        //Extracting user id and email from the session
+                        String userId = mAuth.getCurrentUser().getUid();
+                        String userEmail = mAuth.getCurrentUser().getEmail();
+
+                        //Fetching user details for sending email message to the cleaner
+                        DocumentReference docRef1 = db.collection("userInfo").document(userId);
+                        docRef1.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                              public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        //hash map for user object
+                                        Map<String, Object> user = new HashMap<>();
+                                        user = document.getData();
+                                        String content = user.toString();
+                                        //trimming the { and } symbols from the string
+                                        content=content.substring(1, content.length()-1);
+                                        String username= (String) user.get("name");
+                                        String cleanerSubject = "Spotless: Client Details";
+                                        String messageToCleaner = "You have a client cleaning appointment. Following is your client booking information. "+content;
+                                        //Creating SendMail object for cleaner
+                                        SendMail emailToStaff = new SendMail(BookingCleaner.this, cleanerEmail, cleanerSubject, messageToCleaner);
+                                        String ClientSubject = "Spotless: Cleaner Details";
+                                        String messageForClient = "Hi "+username+","+" Successfully booked. Following are your cleaner details"+CleanerInfo;
+                                        //Creating SendMail object for Client/user
+                                        SendMail emailToClient = new SendMail(BookingCleaner.this, userEmail, ClientSubject, messageForClient);
+                                        //Executing sendmail to send email
+                                        emailToStaff.execute();
+                                        emailToClient.execute();
+                                    }
+                                }
+                            }
+                        });
+
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("onFailure", e.getMessage());
+            }
+        });
+         }
     }
 
 

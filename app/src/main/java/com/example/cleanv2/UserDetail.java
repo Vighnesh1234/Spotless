@@ -5,8 +5,7 @@ import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -14,7 +13,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.view.View;
 import android.widget.Button;
@@ -56,9 +54,12 @@ public class UserDetail extends AppCompatActivity {
         setContentView(R.layout.activity_user_detail);
         ButterKnife.bind( this );
 
+        //getting the current uid of the present user
         String userId = mAuth.getCurrentUser().getUid();
 
-        DocumentReference docRef = db.collection("user4").document(userId);
+
+        //Fetching the details of the current user
+        DocumentReference docRef = db.collection("userInfo").document(userId);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -83,13 +84,15 @@ public class UserDetail extends AppCompatActivity {
         });
 
 
+
+//setting the new updated values to the database
         updated.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 String userId = mAuth.getCurrentUser().getUid();
 
-                DocumentReference docRef = db.collection("user4").document(userId);
+                DocumentReference docRef = db.collection("userInfo").document(userId);
 
                 String name=upName.getText().toString();
                 String PhoneNum=upPhoneNum.getText().toString();
@@ -101,37 +104,27 @@ public class UserDetail extends AppCompatActivity {
                 if(name.equalsIgnoreCase(""))
                 {
 
-                    upName.setError("please enter username");//it gives user to info message //use any one //
+                    upName.setError("please enter username");//it gives user to info message for missing username //
                 }
                 else if(PhoneNum.equalsIgnoreCase(""))
                 {
 
-                    upPhoneNum.setError("please enter Number");//it gives user to info message //use any one //
+                    upPhoneNum.setError("please enter Number");//it gives user to info message for missing phone number //
                 }
                 else if(Address.equalsIgnoreCase(""))
                 {
 
-                    upAddress.setError("please enter Address");//it gives user to info message //use any one //
+                    upAddress.setError("please enter Address");//it gives user to info message for missing address //
                 }
 
                 else {
                     docRef.update("name", name);
                     docRef.update("Phone Number", PhoneNum);
                     docRef.update("Address", Address);
-                    Toast.makeText(getApplicationContext(), "Successfully updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),  "Successfully updated", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(UserDetail.this,Home.class));
                 }
             }
         });
-
     }
-
-
-
-
-
-
-
-
-
 }

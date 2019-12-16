@@ -82,12 +82,17 @@ public class Home extends AppCompatActivity {
                 startActivity(new Intent(Home.this,BookingCleaner.class));
             }
         });
-        String userId = mAuth.getCurrentUser().getUid();
-        DocumentReference docRef = db.collection("user4").document(userId);
 
+        //Getting the uid for current user from firebase
+        String userId = mAuth.getCurrentUser().getUid();
+        DocumentReference docRef = db.collection("userInfo").document(userId);
+
+
+        //user logout
         onLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Toast.makeText(getApplicationContext(), "successfully logged out", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(Home.this,MainActivity.class));
             }
@@ -95,7 +100,7 @@ public class Home extends AppCompatActivity {
 
 
 
-
+//Fetching the username from firebase to display on the home screen
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {

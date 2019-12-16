@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:lineSpacingExtra="8sp"
+
             app:ms_background_color="@color/common_google_signin_btn_text_dark_pressed">
 
         </com.jaredrummler.materialspinner.MaterialSpinner>

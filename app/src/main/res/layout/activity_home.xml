@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Logout"
+            android:background="#E0BD1F"
             />
 
     </LinearLayout>
@@ -53,6 +54,7 @@
             android:layout_marginTop="106dp"
             android:layout_marginEnd="150dp"
             android:layout_weight="1"
+            android:background="#E0BD1F"
             android:drawableTop="@drawable/ic_library_books_black_24dp"
 
 
@@ -72,16 +74,17 @@
 
         <Button
             android:id="@+id/onUserDetails"
-            android:layout_width="wrap_content"
-            android:layout_height="109dp"
+            android:layout_width="113dp"
+            android:layout_height="135dp"
             android:layout_marginStart="149dp"
             android:layout_marginTop="106dp"
             android:layout_marginEnd="150dp"
             android:layout_marginBottom="40dp"
             android:layout_weight="1"
+            android:background="#E0BD1F"
             android:drawableTop="@drawable/udetails"
-
-            android:text="User Details" />
+            android:text="User Details"
+            />
 
         <Button
             android:id="@+id/onBookingDetails"
@@ -92,7 +95,7 @@
             android:layout_marginEnd="150dp"
             android:layout_weight="1"
             android:text="Booking Details"
-            />
+            android:background="#E0BD1F"/>
 
     </LinearLayout>
 

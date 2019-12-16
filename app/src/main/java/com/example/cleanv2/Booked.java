@@ -2,40 +2,29 @@ package com.example.cleanv2;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import com.example.cleanv2.Service.BookingCleaner;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,16 +48,19 @@ public class Booked extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booked);
-
         String userId = mAuth.getCurrentUser().getUid();
         ButterKnife.bind( this );
-        DocumentReference docRef = db.collection("user4").document(userId);
+
+
+        //Retrieving  booking details from firebase and displaying in the list view
+        DocumentReference docRef = db.collection("userInfo").document(userId);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
+
                         Map<String, Object> user = new HashMap<>();
                         user = document.getData();
                         String bookDetails =(String) user.get("Booking Details");
@@ -104,6 +96,8 @@ public class Booked extends AppCompatActivity {
         updateBookingDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+              Toast.makeText(getApplicationContext(), "Please update new booking", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(Booked.this, BookingCleaner.class));
             }
         });

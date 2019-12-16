@@ -33,33 +33,42 @@ public class SignUp extends AppCompatActivity {
 
     public void onClickLogin(View view) {
 
-        String email= editEmail.getText().toString();
-        String pwd=editPassword.getText().toString();
+        String email = editEmail.getText().toString();
+        String pwd = editPassword.getText().toString();
 
-//Validations for checking if email or password is null
-        mAuth.createUserWithEmailAndPassword(email, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
 
-                if (task.isSuccessful()) {
-                    finish();
-                    startActivity(new Intent(SignUp.this, UserInfo.class));
-                   Toast.makeText(getApplicationContext(), "successfully registered", Toast.LENGTH_SHORT).show();
+        //validations for empty login
+        if (email.equalsIgnoreCase("")) {
+            editEmail.setError("please enter email");//it gives user to info message for missing email //
+        } else if (pwd.equalsIgnoreCase("")) {
+            editPassword.setError("please enter password");//it gives user to info message for missing password //
+        } else {
+            //Authenticating user
+            mAuth.createUserWithEmailAndPassword(email, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
 
-                } else {
+                    if (task.isSuccessful()) {
+                        finish();
+                        startActivity(new Intent(SignUp.this, UserInfo.class));
 
-                    if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                        Toast.makeText(getApplicationContext(), "You are already registered", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Please enter details", Toast.LENGTH_SHORT).show();
 
                     } else {
-                        Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
+                        if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+
+                            Toast.makeText(getApplicationContext(), "You are already registered please click sign in", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
                     }
-
                 }
-            }
-        });
+            });
+        }
     }
-
     public void registered(View view) {
         startActivity(new Intent(this,MainActivity.class));
 

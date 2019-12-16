@@ -49,20 +49,20 @@ public class UserInfo extends AppCompatActivity {
                 String name=editName.getText().toString();
                 String PhoneNum=editPhoneNum.getText().toString();
                 String Address=editAddress.getText().toString();
-                String Bookingdetails="booking pending";
+                String Bookingdetails="booking_pending";
 
                 //Validations for null values of user details
                 if(name.equalsIgnoreCase(""))
                 {
-                    editName.setError("please enter username");//it gives user to info message //use any one //
+                    editName.setError("please enter username");//it gives user to info message for missing username //
                 }
                 else if(PhoneNum.equalsIgnoreCase(""))
                 {
-                    editPhoneNum.setError("please enter Number");//it gives user to info message //use any one //
+                    editPhoneNum.setError("please enter Number");//it gives user to info message for missing phone number //
                 }
                 else if(Address.equalsIgnoreCase(""))
                 {
-                    editAddress.setError("please enter Address");//it gives user to info message //use any one //
+                    editAddress.setError("please enter Address");//it gives user to info message for missing address //
                 }
 
                 else
@@ -75,12 +75,13 @@ public class UserInfo extends AppCompatActivity {
 
                     String userId = mAuth.getCurrentUser().getUid();
                     // pushing userdetails to firebase
-                    db.collection("user4").document(userId).set(user)
+                    db.collection("userInfo").document(userId).set(user)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Log.d("onSuccess", "data stored successfully");
                                     startActivity(new Intent(UserInfo.this,Home.class));
+                                    Toast.makeText(getApplicationContext(), "User details saved", Toast.LENGTH_LONG).show();
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                         @Override

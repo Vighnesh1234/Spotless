@@ -8,43 +8,17 @@
     tools:context=".MainActivity">
 
 
-<!--    <TextView
-        android:id="@+id/bookingDetails"
-        android:layout_width="335sp"
-        android:layout_height="200sp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="232dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="149dp"
-        android:background="#00131212"
-        android:ellipsize="end"
-        android:ems="10"
-        android:gravity="fill"
-        android:inputType="textPersonName"
-        android:lines="10"
-        android:maxEms="10"
-        android:maxLines="10"
-        android:singleLine="false"
-        android:text="Booking details rkvbqw.ghukehru5h;q3hgio5h2;4.hg54j.hrvqrewuhk,ewtjgqr"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/updateBookingDetails"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
-
-
     <Button
         android:id="@+id/updateBookingDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="88dp"
+        android:layout_height="48dp"
         android:layout_marginStart="162dp"
-        android:layout_marginTop="464dp"
-
-
+        android:layout_marginTop="488dp"
         android:layout_marginEnd="161dp"
-        android:layout_marginBottom="300dp"
+        android:layout_marginBottom="50dp"
+        android:background="#E0BD1F"
         android:text="update"
-        app:layout_constraintBottom_toTopOf="@+id/singup"
+        app:layout_constraintBottom_toTopOf="@+id/onHome"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,12 +26,13 @@
 
     <Button
         android:id="@+id/onHome"
-        android:layout_width="wrap_content"
+        android:layout_width="88dp"
         android:layout_height="48dp"
         android:layout_marginStart="162dp"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="42dp"
         android:layout_marginEnd="161dp"
-        android:layout_marginBottom="128dp"
+        android:layout_marginBottom="112dp"
+        android:background="#E0BD1F"
         android:text="Home"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,21 +45,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="120dp"
-        android:layout_marginTop="71dp"
+        android:layout_marginTop="56dp"
         android:layout_marginEnd="81dp"
         android:text="Booking Details"
         android:textColor="#111010"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/bookingList"
-        android:layout_width="410dp"
-        android:layout_height="241dp"
-        android:layout_marginTop="45dp"
+        android:layout_width="407dp"
+        android:layout_height="333dp"
+        android:layout_marginTop="36dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
